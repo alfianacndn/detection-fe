@@ -109,9 +109,17 @@
                         <img src="/img/profile.png" width="350">
                     </div>
                     <div style="width:60%;margin:auto" class="d-flex flex-column pa-5 pr-10">
-                        <p style="font-size:1.875em;color:#6D55A3"><strong> {{teams[0].name}}</strong> </p>
-                        <p style="color:#BFBFBF;font-size:1.5em" class="mb-3"> <strong>{{teams[0].sub}}</strong></p>
+                        <p style="font-size:1.875em;color:#6D55A3"><strong> {{teamSelected.name}}</strong> </p>
+                        <p style="color:#BFBFBF;font-size:1.5em" class="mb-3"> <strong>{{teamSelected.sub}}</strong></p>
                         <p> XXXXX XXXXX XXXXX XXXXX XXXXX XXXXX XXXXX XXXXX XXXXX XXXXX </p>
+                    </div>
+                </div>
+                <div class="d-flex flex-row" style="margin:auto">
+                    <div @click="teamSelected=teams[0]" class="mr-2 pointer" :style="teamSelected.name==teams[0].name?'background-color:#D6D6D6':'background-color:#F1F1F1'" style="border-radius:1em;width:1em;height:1em">
+                    </div>
+                    <div @click="teamSelected=teams[1]" class="mr-2 pointer" :style="teamSelected.name==teams[1].name?'background-color:#D6D6D6':'background-color:#F1F1F1'" style="background-color:#F1F1F1;border-radius:1em;width:1em;height:1em">
+                    </div>
+                    <div @click="teamSelected=teams[2]" class="pointer" :style="teamSelected.name==teams[2].name?'background-color:#D6D6D6':'background-color:#F1F1F1'" style="background-color:#F1F1F1;border-radius:1em;width:1em;height:1em">
                     </div>
                 </div>
             </div>
@@ -131,12 +139,12 @@
         </div>
         <div>
             <p class="title-footer"> Call Us </p>
-            <p class="content-footer"> Jalan Kanayakan no 21, Dago Bandung </p>
+            <p class="content-footer"> 022 2500241 </p>
         </div>
     </div>
     <div class=" pa-2 " style="background-color:#D6D6D6;width:100%">
         <div class="d-flex justify-space-between">
-            <p class="content-footer"> © Copyright 2023 by Diana Novita Sari All Rights Reserved. </p>
+            <p class="content-footer" style="margin:auto"> © Copyright 2023 by Diana Novita Sari All Rights Reserved. </p>
         </div>
     </div>
   </div>
@@ -149,7 +157,7 @@ export default {
             features:[
                 {title:'Detection and Classification',img:'', content: 'Detect your dragees with the deep learning method. Our algorithm will classify dragees automatically based on their category.'},
                 {title:'View History',img:'', content: 'All data recorded and successfully detected will be stored in our database to be displayed in the history feature. The data can be downloaded in xlx files.'},
-                {title:'Percentage',img:'', content: 'Content for percentage'}
+                {title:'Percentage',img:'', content: 'The recorded data will be classified based on their category. The category will be visualized by the number of percent on the doughnut chart.'}
             ],
             featureSelected:
                 {
@@ -159,9 +167,10 @@ export default {
                 },
             teams:[
                 {name:'Diana Novita Sari',sub:'4AEB',content:''},
-                {name:'Dr. Susetyo Bagas Bhaskoro. S.ST., M.T',sub:'NIP 198706222015041002',content:''},
-                {name:'Abyanuddin Salam, S.ST., M.Eng',sub:'NIP 198910042010121007',content:''}
-            ]
+                {name:'Dr. Susetyo Bagas Bhaskoro. S.ST., M.T',sub:'198706222015041002',content:''},
+                {name:'Abyanuddin Salam, S.ST., M.Eng',sub:'198910042010121007',content:''}
+            ],
+            teamSelected:{name:'Diana Novita Sari',sub:'4AEB',content:''}
         }
     },
     methods:{
@@ -232,5 +241,8 @@ export default {
     }
     p{
         margin:0
+    }
+    .pointer:hover{
+        cursor:pointer;
     }
 </style>
