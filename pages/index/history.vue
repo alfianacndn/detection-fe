@@ -3,21 +3,112 @@
     <div class="d-flex flex-row ">
         <div  class="mb-5 d-flex flex-row search-button mr-3">
             <input
-            style="width:85%;border:none;outline:none;background-color:white;margin: 5px" placeholder="Search">
-            <v-icon  style="margin:5px" size="24" color="#BDBDBD"> mdi-magnify </v-icon>
+            style="border:none;outline:none;background-color:white;margin: 5px" placeholder="Search">
+            <v-icon   size="24" color="#BDBDBD"> mdi-magnify </v-icon>
         </div>
-            <v-dialog
+        <div class="mb-5 d-flex flex-row filter-area mr-3 pa-0 ma-0">
+          <v-dialog
+            ref="dialog1"
+            v-model="modal1"
+            :return-value.sync="time1"
+            persistent
+            width="290px"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="time1"
+                hide-details
+                readonly
+                v-bind="attrs"
+                v-on="on"
+                style="width:5em"
+                class="pa-0 ma-0"
+                placeholder="Start Time"
+              ></v-text-field>
+            </template>
+            <v-time-picker
+              v-if="modal1"
+              v-model="time1"
+              full-width
+              header-color="#6D55A3"
+              color="#6D55A3"
+            >
+              <v-spacer></v-spacer>
+              <v-btn
+                text
+                color="#6D55A3"
+                @click="modal1 = false"
+              >
+                Cancel
+              </v-btn>
+              <v-btn
+                text
+                color="#6D55A3"
+                @click="$refs.dialog1.save(time1)"
+              >
+                OK
+              </v-btn>
+            </v-time-picker>
+          </v-dialog>
+        </div>
+        <p class="mx-1"> - </p>
+        <div class="mb-5 d-flex flex-row filter-area mr-3 pa-0 ma-0">
+          <v-dialog
+            ref="dialog2"
+            v-model="modal2"
+            :return-value.sync="time2"
+            persistent
+            width="290px"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-text-field
+                v-model="time2"
+                hide-details
+                readonly
+                v-bind="attrs"
+                v-on="on"
+                style="width:5em"
+                class="pa-0 ma-0"
+                placeholder="End Time"
+              ></v-text-field>
+            </template>
+            <v-time-picker
+              v-if="modal2"
+              v-model="time2"
+              full-width
+              header-color="#6D55A3"
+              color="#6D55A3"
+            >
+              <v-spacer></v-spacer>
+              <v-btn
+                text
+                color="#6D55A3"
+                @click="modal2 = false"
+              >
+                Cancel
+              </v-btn>
+              <v-btn
+                text
+                color="#6D55A3"
+                @click="$refs.dialog2.save(time2)"
+              >
+                OK
+              </v-btn>
+            </v-time-picker>
+          </v-dialog>
+        </div>
+        <v-btn  width="100" dark color="#8949F8" class="bold mr-3" @click="filterDate()">FILTER</v-btn>
+            <!-- <v-dialog
                 v-model="filter"
                 persistent
-                width="40%"
+                width="60%"
             >
                 <template  v-slot:activator="{ on, attrs }" >
                     <div style="width:10%" class="mr-3">
-                        <v-btn  v-bind="attrs" v-on="on" width="100" dark color="#8949F8" class="bold " @click="filter">FILTER</v-btn>
                     </div>
                 </template>
                 <SelectDate v-if="filter == true" :filter.sync="filter"/>       
-             </v-dialog>
+             </v-dialog> -->
         <v-btn  width="100" light color="#8949F8" outlined class="for-export bold" >EXPORT</v-btn>
     </div>
 
@@ -78,6 +169,12 @@
     data(){
       return{
         filter:false,
+        time1: null,
+        menu1: false,
+        modal1: false,
+        time2: null,
+        menu2: false,
+        modal2: false,
         items:[
           {date:'May, 1 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
           {date:'May, 2 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
@@ -133,6 +230,9 @@
           }
         }
         return datas
+      },
+      filterDate(){
+        
       }
     }
 
@@ -146,6 +246,13 @@
     background-color:white;
     height:36px;
     border-radius:0.25rem
+}
+.filter-area{
+  width:50%;
+  border:solid 1px #BDBDBD;
+  background-color:white;
+  height:36px;
+  border-radius:0.25rem
 }
 .bold{
     font-weight: 700;

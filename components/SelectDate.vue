@@ -1,22 +1,26 @@
 <template>
   <div>
      <div class="pb-10" style="background-color:white !important">
-        <div  style="background-color:#6D55A3 !important;color:white">
+        <!-- <div  style="background-color:#6D55A3 !important;color:white">
             <v-card-title class="pl-8 pb-2 pt-5" style="font-size:2rem "> FILTER </v-card-title>
-        </div>
-        <div class="pb-4 pt-5 mx-11">
+        </div> -->
+        <!-- <div class="pb-4 pt-5 mx-11">
             <p style="text-align:justify"> Select Date</p>
-        </div>
-        <v-row style="width:100%" class="px-11">
+        </div> -->
+        <!-- <v-row style="width:100%" class="px-11">
             <v-col cols="7" style="border-right:solid 1px #B8D0DD;">
-                <v-date-picker 
-                            range
-                            no-title
-                            width="100%"
-                            v-model="dateRange"
-                            color="#6D55A3"
-                            @click="cek()"
-                ></v-date-picker>
+
+                <v-time-picker
+                    v-model="time"
+                    :allowed-hours="allowedHours"
+                    :allowed-minutes="allowedMinutes"
+                    class="mt-4"
+                    format="24hr"
+                    scrollable
+                    min="9:30"
+                    max="22:15"
+                    no-title
+                ></v-time-picker>
             </v-col>
             <v-col cols="5" class="py-12">
                 <v-col cols="12" class="pa-0 ">
@@ -38,7 +42,26 @@
                     </v-row>
                 </v-col>
             </v-col>
-        </v-row>
+        </v-row> -->
+        <v-row
+      justify="space-around"
+      align="center"
+    >
+      <v-col style="width: 300px; flex: 0 1 auto;">
+        <!-- <h2>Start:</h2> -->
+        <v-time-picker
+          v-model="start"
+          :max="end"
+        ></v-time-picker>
+      </v-col>
+      <v-col style="width: 300px; flex: 0 1 auto;">
+        <!-- <h2>End:</h2> -->
+        <v-time-picker
+          v-model="end"
+          :min="start"
+        ></v-time-picker>
+      </v-col>
+    </v-row>
         <div class="mt-5 mx-11" >
             <p v-if="validationisBigger" style="text-align:justify;color:red" class="font-italic"> *Waktu mulai tidak dapat lebih besar dari waktu selesai</p>
         
@@ -58,7 +81,10 @@ export default {
     props:['filter'],
     data(){
         return {
+            start: null,
+            end: null,
             dateRange:[],
+            timeRange:'',
             month:[
                 'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'
             ],
