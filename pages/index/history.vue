@@ -1,12 +1,12 @@
 <template>
   <div class="pa-15 d-flex-flex-column">
-    <div class="d-flex flex-row ">
-        <div  class="mb-5 d-flex flex-row search-button mr-3">
+    <div class="d-flex justify-space-between  ">
+        <div  class="mb-5 d-flex flex-row search-button ">
             <input
             style="border:none;outline:none;background-color:white;margin: 5px" placeholder="Search">
             <v-icon   size="24" color="#BDBDBD"> mdi-magnify </v-icon>
         </div>
-        <div class="mb-5 d-flex flex-row filter-area mr-3 pa-0 ma-0">
+        <div class="mb-5 d-flex flex-row filter-area  pa-0 ma-0">
           <v-dialog
             ref="dialog1"
             v-model="modal1"
@@ -21,7 +21,6 @@
                 readonly
                 v-bind="attrs"
                 v-on="on"
-                style="width:5em"
                 class="pa-0 ma-0"
                 placeholder="Start Time"
               ></v-text-field>
@@ -52,7 +51,7 @@
           </v-dialog>
         </div>
         <p class="mx-1"> - </p>
-        <div class="mb-5 d-flex flex-row filter-area mr-3 pa-0 ma-0">
+        <div class="mb-5 d-flex flex-row filter-area  pa-0 ma-0">
           <v-dialog
             ref="dialog2"
             v-model="modal2"
@@ -67,7 +66,6 @@
                 readonly
                 v-bind="attrs"
                 v-on="on"
-                style="width:5em"
                 class="pa-0 ma-0"
                 placeholder="End Time"
               ></v-text-field>
@@ -97,19 +95,16 @@
             </v-time-picker>
           </v-dialog>
         </div>
-        <v-btn  width="100" dark color="#8949F8" class="bold mr-3" @click="filterDate()">FILTER</v-btn>
-            <!-- <v-dialog
-                v-model="filter"
-                persistent
-                width="60%"
-            >
-                <template  v-slot:activator="{ on, attrs }" >
-                    <div style="width:10%" class="mr-3">
-                    </div>
-                </template>
-                <SelectDate v-if="filter == true" :filter.sync="filter"/>       
-             </v-dialog> -->
-        <v-btn  width="100" light color="#8949F8" outlined class="for-export bold" >EXPORT</v-btn>
+        <v-btn  width="100" dark color="#8949F8" class="bold " @click="filterDate()">FILTER</v-btn>
+          <download-excel
+            class="btn btn-default"
+            :data="items"
+            :fields="json_fields"
+            worksheet="History1"
+            name="Data-History.xls"
+          >
+            <v-btn  width="100" outlined light color="#8949F8" class="for-export bold" >EXPORT</v-btn>
+          </download-excel>
     </div>
 
     <v-card class="pa-5 mt-5">
@@ -165,9 +160,25 @@
 </template>
 
 <script>
+
   export default {
     data(){
       return{
+        json_fields: {
+          Date: 'date',
+          Time: 'time',
+          PIC : 'pic',
+          Classification: 'condition',
+          Accuration: 'accuration',
+        },
+        json_meta: [
+          [
+            {
+              key: 'charset',
+              value: 'utf-8',
+            },
+          ],
+        ],
         filter:false,
         time1: null,
         menu1: false,
@@ -198,7 +209,7 @@
           {date:'May, 20 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
           {date:'May, 21 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
         ],
-        selectedItem:[],
+        selectedItems:[],
         selectedPage:1,
       }
     },
@@ -229,10 +240,11 @@
             datas.push(this.items[i])
           }
         }
+        this.selectedItems = datas
         return datas
       },
       filterDate(){
-        
+
       }
     }
 
@@ -248,7 +260,6 @@
     border-radius:0.25rem
 }
 .filter-area{
-  width:50%;
   border:solid 1px #BDBDBD;
   background-color:white;
   height:36px;
