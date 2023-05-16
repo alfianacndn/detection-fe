@@ -49,33 +49,92 @@
                 </tr>
               </thead>
               <tbody>
-                <!-- <tr style="text-align:center">
-                    <td colspan="12" v-if="(tableLoader && dataSK.length==0) || dataSK.length==0"> {{tableLoader?'Memuat data...' : 'Data kosong'}}</td>    
-                </tr> -->
-                <tr
+                <tr v-for="(item,i) in forData()" :key="i"
                 >
-                  <td class="text-center">1</td>
-                  <td>May, 10 2023</td>
-                  <td>13:00</td>
-                  <td>Diana Novita Sari</td>
-                  <td>Good</td>
-                  <td>99% </td>
+                  <td class="text-center">{{((selectedPage - 1) * 10)+ 1 + i}}</td>
+                  <td>{{item.date}}</td>
+                  <td>{{item.time}}</td>
+                  <td>{{item.pic}}</td>
+                  <td>{{item.condition}}</td>
+                  <td>{{item.accuration}}</td>
                 </tr>
               </tbody>
             </template>
-            
         </v-simple-table>
+        <div class="d-flex flex-row-reverse mt-5 mr-5">
+          <div class="d-flex flex-row">
+            <div class="d-flex flex-row ml-1 click-page" v-for="(page,i) in forPage()" :key="i" :style="i+1==selectedPage?'background-color:#EED2FF;color:#8949F8;border-radius:1.5em;width:1.5em;height:1.5em':''"> 
+              <p @click="forData(i+1,'click')" style="margin:auto"> {{i+1}} </p>
+            </div>
+          </div>
+          <p class="mr-5" style="font-size:0.8em"> Page </p>
+        </div>
     </v-card>
   </div>
 </template>
 
 <script>
-export default {
+  export default {
     data(){
-        return{
-            filter:false,
-        }
+      return{
+        filter:false,
+        items:[
+          {date:'May, 1 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
+          {date:'May, 2 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
+          {date:'May, 3 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
+          {date:'May, 4 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
+          {date:'May, 5 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
+          {date:'May, 6 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
+          {date:'May, 7 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
+          {date:'May, 8 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
+          {date:'May, 9 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
+          {date:'May, 10 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
+          {date:'May, 11 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
+          {date:'May, 12  2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
+          {date:'May, 13 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
+          {date:'May, 14 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
+          {date:'May, 15 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
+          {date:'May, 16 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
+          {date:'May, 17 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
+          {date:'May, 18  2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
+          {date:'May, 19 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
+          {date:'May, 20 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
+          {date:'May, 21 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
+        ],
+        selectedItem:[],
+        selectedPage:1,
+      }
     },
+    methods:{
+      forPage(){
+        let totalData = this.items.length
+        let totalPage = 0
+        let sisaBagi = totalData % 10
+        totalPage = (totalData - sisaBagi) / 10
+
+        if (sisaBagi > 0 ){
+          return totalPage + 1
+        } else {
+          return totalPage
+        }
+      },
+      forData(val,kind){
+        console.log('cek')
+        if (kind == 'click'){
+          this.selectedPage = val
+        }
+        let datas= []
+        let start = 1
+        start = ((this.selectedPage - 1) * 10)+ 1
+        let end = this.selectedPage * 10 
+        for (var i=0;i<this.items.length;i++){
+          if (i+1 >= start && i+1 <= end){
+            datas.push(this.items[i])
+          }
+        }
+        return datas
+      }
+    }
 
 }
 </script>
@@ -93,5 +152,15 @@ export default {
 }
 .for-export{
     background-color: #fff;
+}
+p{
+  margin:0
+}
+.click-page:hover{
+  cursor: pointer;
+}
+
+.click-page{
+  font-size:0.8em
 }
 </style>
