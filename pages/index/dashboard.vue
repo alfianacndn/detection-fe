@@ -161,8 +161,15 @@
       <v-btn  width="100" dark block color="#8949F8" class="bold " >FILTER</v-btn>
     </v-card>
 
-    <v-card class="pa-5 mt-10">
-      <!-- <DoughnutChart style="width:40%"/> -->
+    <v-card class="pa-5 px-15 mt-10 d-flex flex-row">
+      <div class="d-flex flex-column ml-15" style="margin:auto 0;width:60%" >
+        <p class="mr-0 ml-0 mb-3 font-weight-bold for-title-card"> {{list.title}} </p>
+        <div class="d-flex flex-row" v-for="(sublist,j) in list.categories" :key="j">
+          <div style="border:solid 1 px;width:1em;height:1em;" :style="sublist.style"> </div>
+          <p class="ml-5"> {{sublist.title}} </p>
+        </div>
+      </div>
+      <DoughnutChart class="mr-15" :forLabel="list.label" :forData="list.value" :forColor="list.color" style="width:40%"/>
     </v-card>
   </div>
 </template>
@@ -179,6 +186,18 @@ export default {
       startMenuDate: false,
       endDate: null,
       endMenuDate: false,
+      list:
+        { title:'Condition Percentage',
+          label:['Good','Bits On Dragee','Leaking','Double'],
+          value:[1,2,3,4],
+          color:['#6D55A3','#8949F8','#A26BF9','#E6C3FC'],
+          categories:[
+            {title:'Good',style:'background-color:#6D55A3'},
+            {title:'Bits On Dragee',style:'background-color:#8949F8'},
+            {title:'Leaking',style:'background-color:#A26BF9'},
+            {title:'Double',style:'background-color:#E6C3FC'},
+          ]
+        },
     }
   }
 }
