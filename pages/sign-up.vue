@@ -20,6 +20,7 @@
             hide-details
             outlined
             dense
+            v-model="form.name"
         ></v-text-field>
         <div class="sub-title">
             <p> Email </p>
@@ -28,6 +29,7 @@
             hide-details
             outlined
             dense
+            v-model="form.email"
         ></v-text-field>
          <div class="sub-title">
             <p> Password </p>
@@ -36,6 +38,8 @@
             hide-details
             outlined
             dense
+            v-model="form.password"
+            type="password"
         ></v-text-field>
          <div class="sub-title">
             <p> Password Confirmation</p>
@@ -44,8 +48,10 @@
             hide-details
             outlined
             dense
+            v-model="form.password_confirmation"
+            type="password"
         ></v-text-field>
-        <v-btn x-large color="#FCD269" class="font-weight-bold my-3 text-capitalize"> Register</v-btn>
+        <v-btn x-large color="#FCD269" class="font-weight-bold my-3 text-capitalize" @click="forRegister()"> Register</v-btn>
         <div class="detail d-flex" style="margin:auto">
             <p> Don’t have an account?</p>
             <a style="color:#6D55A3" @click="$router.push('/sign-in')"> Sign In here</a>
@@ -59,8 +65,40 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
-
+    data(){
+        return {
+            form :{name:'',password:'',email:'',password_confirmation:''}
+        }
+    },
+    methods:{
+        forRegister(){
+            console.log('register')
+            axios({
+                url: this.$axios.defaults.baseURL + 'api/register',
+                method: "post",
+                headers: {
+                'accept': 'application/json',
+                'Content-Type': 'application/json',
+                },
+                data: this.form
+            })
+            .then((res) => {
+                // console.log(res)
+                this.$toast.success('Data berhasil ditambahkan!',{timeout:1500})
+                this.$router.push('/sign-in')
+            })
+            .catch((error) => {
+                console.log(error.response.data.message   )
+                this.$toast.error('Data tidak berhasil ditambahkan! Periksa kembali masukan',{timeout:1500})
+      
+            })
+            .finally((res) => {
+               
+            });
+        }
+    }
 }
 </script>
 
