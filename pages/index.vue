@@ -23,7 +23,7 @@
           <v-btn text class="mr-4" @click="$router.push('/landing-page')">
             <a style="text-decoration:none;color:black"  >Contact Us</a>
           </v-btn >
-          <v-btn text class="mr-4" @click="$router.push('/landing-page')">
+          <v-btn text class="mr-4" @click="forLogout()">
             <a style="text-decoration:none;color:black"  >Account</a>
           </v-btn >
         </div>
@@ -60,6 +60,7 @@
 
 <script>
 export default {
+  middleware:'auth',
    data(){
     return{
       menus:[
@@ -74,6 +75,10 @@ export default {
     clickMenu(val){
       this.$router.push(val.routing)
       this.selectedMenu=val
+    },
+    forLogout(){
+      this.$auth.logout()
+      
     }
    }
 }

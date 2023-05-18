@@ -176,6 +176,7 @@
 
 <script>
 export default {
+  
   data(){
     return {
       startTime:null,
@@ -199,6 +200,10 @@ export default {
           ]
         },
     }
+  },
+  mounted(){
+    console.log(localStorage['auth._token.local'])
+    console.log(this.$store.state.user)
   }
 }
 </script>

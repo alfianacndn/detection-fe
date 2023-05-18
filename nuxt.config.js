@@ -46,6 +46,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    '@nuxtjs/auth',
     "vue-toastification/nuxt",
      // You can also pass plugin options
     ["vue-toastification/nuxt", {
@@ -58,6 +59,33 @@ export default {
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
     baseURL: 'http://localhost:8000/', 
+  },
+  auth: {
+    redirect: {
+      login: '/landing-page',
+      // logout: '/landing-page',
+      // callback: '/home',
+      home: '/home'
+    },
+    strategies: {
+       local: {
+        token: {
+          property: 'token',
+          required: true,
+          type: 'Bearer'
+        },
+        endpoints: {
+          login: { url: 'api/login', method: 'post',propertyName:'data.token'},
+          logout: false,
+          user: false,
+        },
+        autoFetchUser:false,
+        globalToken: true
+       }
+    },
+    localStorage: {
+      prefix: 'auth.'
+    }
   },
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
