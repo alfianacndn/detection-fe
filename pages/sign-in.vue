@@ -35,6 +35,7 @@
         <div class="detail d-flex" style="margin:auto">
             <p> Don’t have an account?</p>
             <a style="color:#6D55A3" @click="$router.push('/sign-up')"> Sign Up here</a>
+            <v-btn @click="$router.push('/landing-page')" > Contoh Button Untuk next </v-btn>
         </div>
 
     </div>
@@ -50,29 +51,47 @@ import axios from '@nuxtjs/axios'
 export default {
     data(){
         return{
-            form:{email:'',password:''}
+            form:{email:'',password:''},
+            isLoggedIn: false,
         }
     },
     methods:{
         forLogin(){
+            this.isLoggedIn = false
+            console.log('cek function', localStorage['auth.userData'])
+
             this.$auth.loginWith('local', {
                 data: this.form
             }).then(res => {
                 console.log(res.data.user)
-                this.$toast.success('Berhasil masuk!',{timeout:1500})
+                // this.$toast.success('Berhasil masuk!',{timeout:1500})
                 //set token
                 this.$auth.setToken('local',res.data.token)
+                localStorage['auth.userData'] = JSON.stringify(res.data.user)
                 //get detail user
                 this.$store.commit('login',this.login)
                 this.$store.commit('setUser',res.data.user)
-                // this.$router.push('/home')
-                
+                this.isLoggedIn = true
                 console.log('cek token',localStorage['auth._token.local'])
             }).catch((error) => {
                 console.log(error.response.data.message)
+                this.isLoggedIn=false
                 this.$toast.error('Tidak berhasil masuk. Periksa kembali masukan.',{timeout:1500})
       
+            }).finally(() => {
+                if(this.isLoggedIn == true){
+                    console.log('cek sebelum ush',this.isLoggedIn)
+                    
+                    this.linkToDashboard()
+
+                    console.log('cek sesudah ush',this.isLoggedIn)
+                } 
             })
+        },
+        linkToDashboard(){
+            console.log('cek function2', this.$auth.loggedIn)
+            
+            this.$router.push(this.$route.query.redirect || '/dashboard')
         }
     }
 }

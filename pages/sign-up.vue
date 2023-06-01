@@ -76,7 +76,7 @@ export default {
         forRegister(){
             console.log('register')
             axios({
-                url: this.$axios.defaults.baseURL + 'api/register',
+                url: process.env.VUE_APP_BASE_URL_LARAVEL + 'api/register',
                 method: "post",
                 headers: {
                 'accept': 'application/json',

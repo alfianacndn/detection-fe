@@ -31,7 +31,9 @@ export default {
   plugins: [
     { src: '~/plugins/vue-camera.js', mode: 'client' },
     // { src: '~/plugins/chart.js', mode: 'client'},
-    { src: '~/plugins/vue-json-excel.js', mode: 'client' }],
+    { src: '~/plugins/vue-json-excel.js', mode: 'client' },
+    { src: '~/plugins/vue-web-cam.js', mode: 'client' }],
+
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -48,6 +50,8 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/auth',
     "vue-toastification/nuxt",
+    '@nuxtjs/dotenv',
+    // 'vue-web-cam/nuxt'
      // You can also pass plugin options
     ["vue-toastification/nuxt", {
       timeout: 500,
@@ -58,14 +62,14 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: 'http://localhost:8000/', 
+    baseURL: 'http://localhost:8080/', 
   },
   auth: {
     redirect: {
-      login: '/landing-page',
-      // logout: '/landing-page',
-      // callback: '/home',
-      home: '/home'
+      login: '/sign-in',
+      logout: '/sign-in',
+      // callback: '/landing-page',
+      home: '/dashboard'
     },
     strategies: {
        local: {
@@ -76,7 +80,7 @@ export default {
         },
         endpoints: {
           login: { url: 'api/login', method: 'post',propertyName:'data.token'},
-          logout: false,
+          logout: { url: 'api/logout', method: 'post',propertyName:false},
           user: false,
         },
         autoFetchUser:false,

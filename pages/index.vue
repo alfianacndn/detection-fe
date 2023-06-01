@@ -23,9 +23,25 @@
           <v-btn text class="mr-4" @click="$router.push('/landing-page')">
             <a style="text-decoration:none;color:black"  >Contact Us</a>
           </v-btn >
-          <v-btn text class="mr-4" @click="forLogout()">
-            <a style="text-decoration:none;color:black"  >Account</a>
-          </v-btn >
+          <v-menu offset-y>
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                light
+                v-bind="attrs"
+                v-on="on"
+                text
+              >
+                Account
+              </v-btn>
+            </template>
+            <v-list>
+              <v-list-item
+              >
+                <v-btn text @click="forLogout()">Logout</v-btn>
+
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </div>
     </v-app-bar>
 
@@ -37,6 +53,15 @@
       class="for-side-bar py-10"
     >
       <v-list class="ml-7 mr-7 mt-15" >
+        <div class="d-flex flex-row"> 
+          <img size="1" style="height:2em !important;width: 2em;margin:auto 0 !important"  :src="'/img/profile.png'"/>
+          <div class="d-flex flex-column ml-3">
+            <p style="color:#8949F8;font-weight:600"> {{this.userLogin.name}}</p>
+
+            <p style="font-size:0.75em"> {{this.userLogin.email }}</p>
+          </div>
+        </div>
+        <v-divider class="my-4"> </v-divider>
         <v-list-item 
           class=" pl-2 py-0   " 
           style="width:100%;"
@@ -52,13 +77,14 @@
     </v-navigation-drawer>
 
     <div class="content-area pa-0" >
-      <nuxt-child keep-alive/>
+      <nuxt-child keep-alive />
     </div>
     
   </div>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   middleware:'auth',
    data(){
@@ -68,7 +94,9 @@ export default {
         {name:'Detection',routing:'/detection',icon:'mdi-camera'},
         {name:'History',routing:'/history',icon:'mdi-list-box'}
       ],
-      selectedMenu:{name:'Dashboard',routing:'/dashboard',icon:'mdi-home'}
+      selectedMenu:{name:'Dashboard',routing:'/dashboard',icon:'mdi-home'},
+      isDataSuccess:false,
+      userLogin:JSON.parse(localStorage['auth.userData']),
     }
    },
    methods:{
@@ -78,8 +106,10 @@ export default {
     },
     forLogout(){
       this.$auth.logout()
-      
-    }
+    },
+    
+   },
+   beforeMount(){
    }
 }
 </script>

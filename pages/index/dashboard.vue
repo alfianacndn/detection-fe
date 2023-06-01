@@ -158,7 +158,7 @@
           </v-menu>
         </div>
       </div>
-      <v-btn  width="100" dark block color="#8949F8" class="bold " >FILTER</v-btn>
+      <v-btn  width="100" dark block color="#8949F8" class="bold " @click="forFilter()" >FILTER</v-btn>
     </v-card>
 
     <v-card class="pa-5 px-15 mt-10 d-flex flex-row">
@@ -175,8 +175,9 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
-  
+  // props:['items','value'],
   data(){
     return {
       startTime:null,
@@ -187,23 +188,113 @@ export default {
       startMenuDate: false,
       endDate: null,
       endMenuDate: false,
+      isDataSuccess:false,
+      items:[],
       list:
         { title:'Condition Percentage',
-          label:['Good','Bits On Dragee','Leaking','Double'],
-          value:[1,2,3,4],
+          label:['Good','Bits','Leaking','Double'],
+          value:this.value,
           color:['#6D55A3','#8949F8','#A26BF9','#E6C3FC'],
           categories:[
             {title:'Good',style:'background-color:#6D55A3'},
-            {title:'Bits On Dragee',style:'background-color:#8949F8'},
+            {title:'Bits',style:'background-color:#8949F8'},
             {title:'Leaking',style:'background-color:#A26BF9'},
             {title:'Double',style:'background-color:#E6C3FC'},
           ]
         },
     }
   },
-  mounted(){
+  methods:{
+    
+    getData(){
+      this.isDataSuccess = false
+      axios({
+        url: process.env.VUE_APP_BASE_URL_LARAVEL + 'api/history',
+        method: "get",
+        headers: {
+          'accept': 'application/json',
+          Authorization: 'Bearer ' + localStorage['auth._token.local'] 
+        },
+      }).then((res) => { 
+        console.log('cek data',res)
+        this.items = res.data
+        this.isDataSuccess = true
+      }).catch((error) => {
+        console.log(error)
+        this.isDataSuccess = false
+      }).finally(() => {
+        if (this.isDataSuccess == true){
+          let good = 0
+          let bits = 0
+          let leaking = 0
+          let double = 0
+
+          for (var i=0;i<this.items.length;i++){
+            if (this.items[i].classification == 'Good'){
+              good = good +1
+            } else if (this.items[i].classification == 'Bits'){
+              bits = bits + 1
+            } else if (this.items[i].classification == 'Leaking'){
+              leaking = leaking + 1
+            } else if (this.items[i].classification == 'Double'){
+              double = double + 1
+            }
+          }
+
+          this.list.value = [good , bits , leaking , double]
+          console.log('value',this.value)
+        }
+      })
+
+
+    },
+    forFilter(){
+      this.isDataSuccess = false
+      console.log('start time' + this.startTime + 'end time' + this.endTime + 'Start date ' + this.startDate + 'end date' + this.endDate)
+      axios({
+          url: process.env.VUE_APP_BASE_URL_LARAVEL + 'api/history_bydate',
+          method: "post",
+          headers: {
+            'accept': 'application/json',
+            Authorization: 'Bearer ' + localStorage['auth._token.local'],
+          },
+          data: {start_time: this.startTime + ':00', end_time:this.endTime + ':00', start_date: this.startDate ,end_date: this.endDate}
+        }).then((res) => { 
+          console.log('cek data',res)
+          this.items = res.data
+          this.isDataSuccess = true
+        }).catch((error) => {
+          console.log(error)
+          this.isDataSuccess = false
+        }).finally(() => {
+          if (this.isDataSuccess == true){
+            let good = 0
+            let bits = 0
+            let leaking = 0
+            let double = 0
+
+            for (var i=0;i<this.items.length;i++){
+              if (this.items[i].classification == 'Good'){
+                good = good +1
+              } else if (this.items[i].classification == 'Bits'){
+                bits = bits + 1
+              } else if (this.items[i].classification == 'Leaking'){
+                leaking = leaking + 1
+              } else if (this.items[i].classification == 'Double'){
+                double = double + 1
+              }
+            }
+
+            this.list.value = [good , bits , leaking , double]
+            console.log('value',this.value)
+          }
+        })
+    }
+  },
+  beforeMount(){
     console.log(localStorage['auth._token.local'])
     console.log(this.$store.state.user)
+    this.getData()
   }
 }
 </script>

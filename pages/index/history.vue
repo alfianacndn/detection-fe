@@ -3,8 +3,8 @@
     <div class="d-flex justify-space-between  ">
         <div  class="mb-5 d-flex flex-row search-button ">
             <input
-            style="border:none;outline:none;background-color:white;margin: 5px" placeholder="Search">
-            <v-icon   size="24" color="#BDBDBD"> mdi-magnify </v-icon>
+            style="border:none;outline:none;background-color:white;margin: 5px" placeholder="Search" v-model="inputSearch">
+            <v-icon @click="filterBySearch()" size="24" color="#BDBDBD"> mdi-magnify </v-icon>
         </div>
         <div class="mb-5 d-flex flex-row filter-area  pa-0 ma-0">
           <v-dialog
@@ -31,6 +31,7 @@
               full-width
               header-color="#6D55A3"
               color="#6D55A3"
+              format="24hr"
             >
               <v-spacer></v-spacer>
               <v-btn
@@ -76,6 +77,7 @@
               full-width
               header-color="#6D55A3"
               color="#6D55A3"
+              format="24hr"
             >
               <v-spacer></v-spacer>
               <v-btn
@@ -95,7 +97,7 @@
             </v-time-picker>
           </v-dialog>
         </div>
-        <v-btn  width="100" dark color="#8949F8" class="bold " @click="filterDate()">FILTER</v-btn>
+        <v-btn  width="100" dark color="#8949F8" class="bold " @click="filterByTime()">FILTER</v-btn>
           <download-excel
             class="btn btn-default"
             :data="items"
@@ -141,7 +143,7 @@
                   <td>{{item.date}}</td>
                   <td>{{item.time}}</td>
                   <td>{{item.pic}}</td>
-                  <td>{{item.condition}}</td>
+                  <td>{{item.classification}}</td>
                   <td>{{item.accuration}}</td>
                 </tr>
               </tbody>
@@ -160,7 +162,7 @@
 </template>
 
 <script>
-
+import axios from 'axios'
   export default {
     data(){
       return{
@@ -186,31 +188,10 @@
         time2: null,
         menu2: false,
         modal2: false,
-        items:[
-          {date:'May, 1 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
-          {date:'May, 2 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
-          {date:'May, 3 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
-          {date:'May, 4 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
-          {date:'May, 5 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
-          {date:'May, 6 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
-          {date:'May, 7 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
-          {date:'May, 8 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
-          {date:'May, 9 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
-          {date:'May, 10 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
-          {date:'May, 11 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
-          {date:'May, 12  2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
-          {date:'May, 13 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
-          {date:'May, 14 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
-          {date:'May, 15 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
-          {date:'May, 16 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
-          {date:'May, 17 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
-          {date:'May, 18  2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
-          {date:'May, 19 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
-          {date:'May, 20 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
-          {date:'May, 21 2023',time:'13:00',pic:'Diana Novita Sari',condition:'Good',accuration:'99%'},
-        ],
+        items:[],
         selectedItems:[],
         selectedPage:1,
+        inputSearch:'',
       }
     },
     methods:{
@@ -243,9 +224,59 @@
         this.selectedItems = datas
         return datas
       },
-      filterDate(){
-
+      getData(){
+        axios({
+          url: process.env.VUE_APP_BASE_URL_LARAVEL + 'api/history',
+          method: "get",
+          headers: {
+            'accept': 'application/json',
+            Authorization: 'Bearer ' + localStorage['auth._token.local'] 
+          },
+        }).then((res) => { 
+          console.log('cek data',res)
+          this.items = res.data
+        }).catch((error) => {
+          console.log(error)
+        })
+      },
+      filterBySearch(){
+        console.log(this.inputSearch)
+        axios({
+          url: process.env.VUE_APP_BASE_URL_LARAVEL + 'api/history_bysearch',
+          method: "post",
+          headers: {
+            'accept': 'application/json',
+            Authorization: 'Bearer ' + localStorage['auth._token.local'],
+          },
+          data: {input_search: this.inputSearch}
+        }).then((res) => { 
+          console.log('cek data',res)
+          this.items = res.data
+        }).catch((error) => {
+          console.log(error)
+        })
+      },
+      filterByTime(){
+        console.log('time1',this.time1)
+        console.log('time2',this.time2)
+        axios({
+          url: process.env.VUE_APP_BASE_URL_LARAVEL + 'api/history_bytime',
+          method: "post",
+          headers: {
+            'accept': 'application/json',
+            Authorization: 'Bearer ' + localStorage['auth._token.local'],
+          },
+          data: {start_time: this.time1 + ':00', end_time:this.time2 + ':00'}
+        }).then((res) => { 
+          console.log('cek data',res)
+          this.items = res.data
+        }).catch((error) => {
+          console.log(error)
+        })
       }
+    },
+    beforeMount(){
+      this.getData()
     }
 
 }
