@@ -23,10 +23,12 @@
             <v-btn text class="mr-4">
                 <a style="text-decoration:none;color:black"  >Contact Us</a>
             </v-btn >
+
             <v-btn class="text-capitalize mr-4"
                 color="white"
                 width="150"
                 @click="$router.push('/sign-up')"
+                v-if="!$auth.loggedIn"
             >
                 SIGN UP
             </v-btn>
@@ -34,9 +36,31 @@
                 color="#FCD269"
                 width="150"
                 @click="$router.push('/sign-in')"
+                v-if="!$auth.loggedIn"
             >
                 SIGN IN
             </v-btn>
+            <v-menu offset-y>
+                <template v-slot:activator="{ on, attrs }">
+                <v-btn
+                    light
+                    v-bind="attrs"
+                    v-on="on"
+                    text
+                    v-if="$auth.loggedIn"
+                >
+                    Account
+                </v-btn>
+                </template>
+                <v-list>
+                    <v-list-item>
+                        <v-btn text @click="forLogout()">Logout</v-btn>
+                    </v-list-item>
+                    <v-list-item>
+                        <v-btn text @click="$router.push('/dashboard')">Dashboard</v-btn>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
         </div>
     </v-app-bar>
     
@@ -176,7 +200,10 @@ export default {
     methods:{
         selectFeature(val){
             this.featureSelected = val
-        }
+        },
+        forLogout(){
+            this.$auth.logout()
+        },
     }
 }
 </script>

@@ -28,7 +28,7 @@ import axios from 'axios'
 export default {
   data(){
     return {
-      currentCondition: 'Bits On Dragee',
+      currentCondition: 'Bits',
       currentAccuration: '99.99%',
       captured:null,
       selected:'',

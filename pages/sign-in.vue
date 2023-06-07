@@ -31,11 +31,18 @@
             v-model="form.password"
             type="password"
         ></v-text-field>
+        <v-alert
+            type="error"
+            dense
+            outlined
+            v-if="error"
+        >
+            {{errorMessage}}
+        </v-alert>
         <v-btn x-large color="#FCD269" class="font-weight-bold mb-3 text-capitalize" @click="forLogin()"> Login</v-btn>
         <div class="detail d-flex" style="margin:auto">
             <p> Don’t have an account?</p>
             <a style="color:#6D55A3" @click="$router.push('/sign-up')"> Sign Up here</a>
-            <v-btn @click="$router.push('/landing-page')" > Contoh Button Untuk next </v-btn>
         </div>
 
     </div>
@@ -49,14 +56,18 @@
 <script>
 import axios from '@nuxtjs/axios'
 export default {
+    ssr:false,
     data(){
         return{
             form:{email:'',password:''},
             isLoggedIn: false,
+            errorMessage:'',
+            error:false,
         }
     },
     methods:{
         forLogin(){
+            this.error = false
             this.isLoggedIn = false
             console.log('cek function', localStorage['auth.userData'])
 
@@ -64,7 +75,7 @@ export default {
                 data: this.form
             }).then(res => {
                 console.log(res.data.user)
-                // this.$toast.success('Berhasil masuk!',{timeout:1500})
+                this.$toast.success('Berhasil masuk!',{timeout:1500})
                 //set token
                 this.$auth.setToken('local',res.data.token)
                 localStorage['auth.userData'] = JSON.stringify(res.data.user)
@@ -75,23 +86,24 @@ export default {
                 console.log('cek token',localStorage['auth._token.local'])
             }).catch((error) => {
                 console.log(error.response.data.message)
+                this.errorMessage = error.response.data.message
                 this.isLoggedIn=false
+                this.error = true
                 this.$toast.error('Tidak berhasil masuk. Periksa kembali masukan.',{timeout:1500})
       
             }).finally(() => {
                 if(this.isLoggedIn == true){
-                    console.log('cek sebelum ush',this.isLoggedIn)
-                    
                     this.linkToDashboard()
-
-                    console.log('cek sesudah ush',this.isLoggedIn)
                 } 
             })
         },
         linkToDashboard(){
-            console.log('cek function2', this.$auth.loggedIn)
-            
             this.$router.push(this.$route.query.redirect || '/dashboard')
+        }
+    },
+    mounted(){
+        if (this.$auth.loggedIn){
+            this.$router.push('/dashboard')
         }
     }
 }

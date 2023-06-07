@@ -22,6 +22,9 @@
             dense
             v-model="form.name"
         ></v-text-field>
+        <div style="color:red">
+            <p v-for="(i,index) in errorMessages.name" :key="index"> {{i}}</p>
+        </div>
         <div class="sub-title">
             <p> Email </p>
         </div>
@@ -31,6 +34,9 @@
             dense
             v-model="form.email"
         ></v-text-field>
+        <div style="color:red">
+            <p v-for="(i,index) in errorMessages.email" :key="index"> {{i}}</p>
+        </div>
          <div class="sub-title">
             <p> Password </p>
         </div>
@@ -41,6 +47,9 @@
             v-model="form.password"
             type="password"
         ></v-text-field>
+        <div style="color:red">
+            <p> {{errorMessages.password[0]}}</p>
+        </div>
          <div class="sub-title">
             <p> Password Confirmation</p>
         </div>
@@ -51,11 +60,15 @@
             v-model="form.password_confirmation"
             type="password"
         ></v-text-field>
+        <div style="color:red">
+            <p> {{errorMessages.password[0]}}</p>
+        </div>
         <v-btn x-large color="#FCD269" class="font-weight-bold my-3 text-capitalize" @click="forRegister()"> Register</v-btn>
         <div class="detail d-flex" style="margin:auto">
             <p> Don’t have an account?</p>
             <a style="color:#6D55A3" @click="$router.push('/sign-in')"> Sign In here</a>
         </div>
+        
 
     </div>
 
@@ -69,12 +82,23 @@ import axios from 'axios'
 export default {
     data(){
         return {
-            form :{name:'',password:'',email:'',password_confirmation:''}
+            form :{name:'',password:'',email:'',password_confirmation:''},
+            errorMessages :{
+                email : [],
+                password: ['',''],
+                name:[]
+            }
         }
+        
     },
     methods:{
         forRegister(){
             console.log('register')
+            this.errorMessages={
+                email : [],
+                password: ['',''],
+                name:[]
+            }
             axios({
                 url: process.env.VUE_APP_BASE_URL_LARAVEL + 'api/register',
                 method: "post",
@@ -90,13 +114,19 @@ export default {
                 this.$router.push('/sign-in')
             })
             .catch((error) => {
-                console.log(error.response.data.message   )
+                console.log(error.response.data)
+                this.errorMessages=error.response.data
                 this.$toast.error('Data tidak berhasil ditambahkan! Periksa kembali masukan',{timeout:1500})
       
             })
             .finally((res) => {
                
             });
+        }
+    },
+    mounted(){
+        if (this.$auth.loggedIn){
+            this.$router.push('/dashboard')
         }
     }
 }

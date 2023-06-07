@@ -3,6 +3,7 @@ import colors from 'vuetify/es5/util/colors'
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   target:'static',
+  ssr:false,
   // Global page headers: https://go.nuxtjs.dev/config-head
   static: {
     prefix: false
@@ -62,13 +63,13 @@ export default {
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: 'http://localhost:8080/', 
+    baseURL: 'http://localhost:803/', 
   },
   auth: {
     redirect: {
-      login: '/sign-in',
-      logout: '/sign-in',
-      // callback: '/landing-page',
+      login: '/landing-page',
+      logout: '/landing-page',
+      // callback: '/dashboard',
       home: '/dashboard'
     },
     strategies: {
@@ -78,12 +79,16 @@ export default {
           required: true,
           type: 'Bearer'
         },
+        user : {
+          property: false,
+          autoFetch: true,
+        },
         endpoints: {
           login: { url: 'api/login', method: 'post',propertyName:'data.token'},
           logout: { url: 'api/logout', method: 'post',propertyName:false},
           user: false,
         },
-        autoFetchUser:false,
+        // autoFetchUser:false,
         globalToken: true
        }
     },
