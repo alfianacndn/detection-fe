@@ -192,14 +192,15 @@ export default {
       items:[],
       list:
         { title:'Condition Percentage',
-          label:['Good','Bits','Leaking','Double'],
+          label:['Good','Bits','Leaking','Double', 'Empty'],
           value:this.value,
-          color:['#6D55A3','#8949F8','#A26BF9','#E6C3FC'],
+          color:['#6D55A3','#8949F8','#A26BF9','#E6C3FC', '#e1dae5'],
           categories:[
             {title:'Good',style:'background-color:#6D55A3'},
             {title:'Bits',style:'background-color:#8949F8'},
             {title:'Leaking',style:'background-color:#A26BF9'},
             {title:'Double',style:'background-color:#E6C3FC'},
+            {title:'Empty',style:'background-color:#e1dae5'},
           ]
         },
     }
@@ -228,20 +229,23 @@ export default {
           let bits = 0
           let leaking = 0
           let double = 0
+          let empty = 0
 
           for (var i=0;i<this.items.length;i++){
-            if (this.items[i].classification == 'Good'){
+            if (this.items[i].classification == 'GOOD'){
               good = good +1
-            } else if (this.items[i].classification == 'Bits'){
+            } else if (this.items[i].classification == 'BITS'){
               bits = bits + 1
-            } else if (this.items[i].classification == 'Leaking'){
+            } else if (this.items[i].classification == 'LEAKING'){
               leaking = leaking + 1
-            } else if (this.items[i].classification == 'Double'){
+            } else if (this.items[i].classification == 'DOUBLE'){
               double = double + 1
+            } else if (this.items[i].classification == 'EMPTY'){
+              empty = empty + 1
             }
           }
 
-          this.list.value = [good , bits , leaking , double]
+          this.list.value = [good , bits , leaking , double, empty]
           console.log('value',this.value)
         }
       })

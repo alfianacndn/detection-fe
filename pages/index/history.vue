@@ -131,9 +131,6 @@
                   <th class="text-left">
                     Classification
                   </th>
-                  <th class="text-left">
-                    Accuration
-                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -144,7 +141,6 @@
                   <td>{{item.time}}</td>
                   <td>{{item.pic}}</td>
                   <td>{{item.classification}}</td>
-                  <td>{{item.accuration}}</td>
                 </tr>
               </tbody>
             </template>

@@ -5,20 +5,21 @@
       <!-- <vue-web-cam autoplay width="500" height="500"/> -->
     </v-card>
     <v-btn @click="checkCamera()"> {{detect == true? 'TAKE AGAIN' : 'TAKE A PICTURE'}} </v-btn>
+    <v-btn @click="realtimeCamera()"> OPEN REALTIME CAMERA </v-btn>
     <div class="d-flex justify-space-around mt-5">
       
-      <v-card class="d-flex  mr-5 align-center" style="width:50%;min-height:20vh">
+      <v-card class="d-flex  align-center" style="width:100%;min-height:20vh">
         <div class="d-flex flex-column align-center" style="margin:auto">
           <p class="content"> {{currentCondition}} </p>
           <p class="title-card"> CONDITION </p>
         </div>
       </v-card>
-      <v-card class="d-flex align-center" style="width:50%">
+      <!-- <v-card class="d-flex align-center" style="width:50%">
         <div class="d-flex flex-column align-center" style="margin:auto">
           <p class="content"> {{currentAccuration}}</p>
           <p class="title-card"> ACCURATION </p>
         </div>
-      </v-card>
+      </v-card> -->
     </div>
   </div>
 </template>
@@ -46,9 +47,10 @@ export default {
       }
     },
     async getCaptured(){
-      // this.detect = true
+      this.detect = true
+      // this.$refs.cam.stop()
+
       this.$refs.cam.snap()
-      this.$refs.cam.stop()
 
       var base64Img = this.captured.replace('data:image/png;base64,','')
       let today = new Date(); 
@@ -85,7 +87,7 @@ export default {
     deepLearning(){
       
       axios({
-        url: process.env.VUE_APP_BASE_URL_DEEP_LEARNING ,
+        url: process.env.VUE_APP_BASE_URL_DEEP_LEARNING + 'captured',
         method: "post",
         headers: {
           'accept': 'application/json',
@@ -101,10 +103,28 @@ export default {
         this.createHistory()
       })
     },
+    realtimeCamera(){
+      this.$refs.cam.stop()
+
+      axios({
+        url: process.env.VUE_APP_BASE_URL_DEEP_LEARNING + 'realtime',
+        method: "post",
+        headers: {
+          'accept': 'application/json',
+          Authorization: 'Bearer ' + localStorage['auth._token.local'],
+        },
+      }).then((res) => { 
+        console.log('cek data',res)
+      }).catch((error) => {
+         console.log(error)
+      }).finally(() => {
+        
+      })
+    },
     createHistory(){
       let dataHistory = {
         classification  :this.currentCondition,
-        accuration  :this.currentAccuration,
+        accuration  :'100%',
       }
        axios({
         url: process.env.VUE_APP_BASE_URL_LARAVEL + "api/insert_history" ,
